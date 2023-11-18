@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     before_create :encrypt_password
     has_one             :alumni_main
+    has_one             :work
     belongs_to          :user_type
     belongs_to          :user_role
     

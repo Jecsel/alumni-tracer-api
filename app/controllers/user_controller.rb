@@ -3,7 +3,7 @@ class UserController < ApplicationController
     before_action :must_be_authenticated , only:[:index, :update_user, :deactivate_user]
 
     def index
-        users = User.all.where(is_active: true, user_role_id: 4).order('created_at DESC')
+        users = User.all.where(is_active: true).order('created_at DESC')
         render json: { user:users },status: 200
     end
 
@@ -54,17 +54,27 @@ class UserController < ApplicationController
         unless User.exists?(username: register_params[:username])
             user = User.create(username: register_params[:username].downcase, password: register_params[:password], user_role_id: 1, user_type_id: register_params[:user_type_id], is_active: true)
 
-            p user
-            alumni_main = user.build_alumni_main(first_name: register_params[:first_name], middle_name: register_params[:middle_name], last_name: register_params[:last_name], batch_year: register_params[:batch_year])
-            alumni_main.save
-
-            p alumni_main
-
-            render json: {message: "Successfully registered." }, status: 200
+            render json: {message: "Successfully registered.", user: user }, status: 200
         else
-            render json: { error: "Username already exists." }, status: 409
+            render json: { message: "Username already exists." }, status: 409
         end        
     end
+
+    # def register
+    #     unless User.exists?(username: register_params[:username])
+    #         user = User.create(username: register_params[:username].downcase, password: register_params[:password], user_role_id: 1, user_type_id: register_params[:user_type_id], is_active: false)
+
+    #         p user
+    #         alumni_main = user.build_alumni_main(first_name: register_params[:first_name], middle_name: register_params[:middle_name], last_name: register_params[:last_name], batch_year: register_params[:batch_year])
+    #         alumni_main.save
+
+    #         p alumni_main
+
+    #         render json: {message: "Successfully registered.", user: user }, status: 200
+    #     else
+    #         render json: { error: "Username already exists." }, status: 409
+    #     end        
+    # end
 
     private
 
@@ -72,8 +82,7 @@ class UserController < ApplicationController
         params
           .require(:user)
           .permit(
-            :username, :password, :confirm_password, :user_type_id, :user_role_id,
-            :first_name, :middle_name, :last_name, :batch_year
+            :username, :password, :confirm_password, :user_type_id, :user_role_id, :is_active
           )
     end
 

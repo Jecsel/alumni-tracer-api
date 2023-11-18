@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
     end
 
     def must_be_authenticated
-        token = request.headers['x-rph-token']
+        token = request.headers['x-tracer-token']
         error_403 if token.blank? || token == 0 || token == ""
     
         data = decode token

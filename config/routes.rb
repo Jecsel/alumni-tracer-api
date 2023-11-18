@@ -20,5 +20,16 @@ Rails.application.routes.draw do
       post 'register'
     end
   end
+
+
+  resources :alumni_main, only: [:index, :create, :show] do
+    collection do
+    end
+  end
+
+  resources :work, only: [:index, :create, :show] do
+    collection do
+    end
+  end
   
 end
