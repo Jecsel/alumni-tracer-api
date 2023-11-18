@@ -132,7 +132,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #419544;
+  color: #2D8EE3;
 }
 
 .layout-wrapper .layout-topbar {
@@ -215,7 +215,7 @@ a {
   transition: all 0.3s;
 }
 .layout-wrapper .layout-topbar #right-panel-button.menu-button-rotate {
-  background-color: #419544;
+  background-color: #2D8EE3;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
@@ -350,7 +350,7 @@ a {
 }
 .layout-wrapper .layout-topbar #topbar-usermenu li a .topbar-submenuitem-badge {
   float: right;
-  background-color: #419544;
+  background-color: #2D8EE3;
   width: 18px;
   height: 18px;
   text-align: center;
@@ -358,7 +358,7 @@ a {
   border-radius: 24px;
 }
 .layout-wrapper .layout-topbar #topbar-usermenu li a:hover {
-  border-color: #419544;
+  border-color: #2D8EE3;
 }
 .layout-wrapper .layout-topbar #topbar-usermenu li ul {
   display: none;
@@ -379,7 +379,7 @@ a {
   display: block;
 }
 .layout-wrapper .layout-topbar #topbar-usermenu > li.menuitem-active > a {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-topbar #topbar-usermenu {
   background-color: #ffffff;
@@ -467,7 +467,7 @@ a {
     transform: rotate(0deg);
   }
   .layout-wrapper.layout-menu-mobile-active .layout-topbar #right-panel-button {
-    background-color: #419544;
+    background-color: #2D8EE3;
   }
   .layout-wrapper.layout-menu-mobile-active .layout-topbar #right-panel-button i {
     color: #ffffff;
@@ -539,7 +539,7 @@ a {
   display: none;
 }
 .layout-wrapper .layout-sidebar .layout-menu > li.active-menuitem > a {
-  background-color: #419544;
+  background-color: #2D8EE3;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -567,10 +567,10 @@ a {
   color: #ffffff;
 }
 .layout-wrapper .layout-sidebar .layout-menu > li > a.active-menuitem-routerlink span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu > li > a.active-menuitem-routerlink i {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu > li > ul:last-child > li:first-child {
   padding-top: 10px;
@@ -596,7 +596,7 @@ a {
   margin-top: -2px;
   float: right;
   color: #ffffff;
-  background-color: #419544;
+  background-color: #2D8EE3;
   width: 20px;
   height: 20px;
   text-align: center;
@@ -631,7 +631,7 @@ a {
   transform: rotate(90deg);
 }
 .layout-wrapper .layout-sidebar .layout-menu li a:hover {
-  border-color: #419544;
+  border-color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul {
   list-style-type: none;
@@ -644,16 +644,16 @@ a {
   padding-left: 35px;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul li a.active-menuitem-routerlink span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul li a.active-menuitem-routerlink i {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul li.active-menuitem > a span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul li.active-menuitem > a i {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper .layout-sidebar .layout-menu li ul li.active-menuitem > a i.layout-menuitem-toggler {
   -webkit-transform: rotate(-180deg);
@@ -682,7 +682,7 @@ a {
   border-bottom: 1px solid #9b9b9b;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu > li.active-menuitem > a {
-  background-color: #419544;
+  background-color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu > li.active-menuitem > a span {
   color: #ffffff;
@@ -697,10 +697,10 @@ a {
   color: #ffffff;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu > li > a.active-menuitem-routerlink span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu > li > a.active-menuitem-routerlink i {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu li a {
   color: #333333;
@@ -712,16 +712,16 @@ a {
   background-color: #efefef;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu li ul li a.active-menuitem-routerlink span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu li ul li a.active-menuitem-routerlink i {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu li ul li.active-menuitem > a span {
-  color: #419544;
+  color: #2D8EE3;
 }
 .layout-wrapper.layout-menu-light .layout-sidebar .layout-menu li ul li.active-menuitem > a i {
-  color: #419544;
+  color: #2D8EE3;
 }
 
 @media (min-width: 1025px) {
@@ -792,7 +792,7 @@ a {
   }
   .layout-wrapper.layout-menu-horizontal .layout-sidebar .layout-menu > li.active-menuitem > ul {
     padding: 0 10px;
-    border-top: 4px solid #419544;
+    border-top: 4px solid #2D8EE3;
   }
   .layout-wrapper.layout-menu-horizontal .layout-sidebar .layout-menu > li.active-menuitem > a {
     -moz-border-radius-bottomleft: 0;
@@ -898,7 +898,7 @@ a {
     overflow: auto;
     max-height: 450px;
     min-width: 250px;
-    border-left: 4px solid #419544;
+    border-left: 4px solid #2D8EE3;
     -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
@@ -1508,7 +1508,7 @@ body .layout-wrapper .layout-main .layout-content {
   width: 1px;
   height: 50px;
   margin: 0 8px 0 4px;
-  background-color: #419544;
+  background-color: #2D8EE3;
   display: inline-block;
   vertical-align: middle;
 }
@@ -1558,7 +1558,7 @@ body .layout-wrapper .layout-main .layout-content {
   vertical-align: middle;
 }
 .layout-content .layout-dashboard .tasks .p-panel-content ul li .time-badge {
-  background-color: #419544;
+  background-color: #2D8EE3;
   border-radius: 12px;
   padding: 3px 8px;
   min-width: 50px;
@@ -1618,7 +1618,7 @@ body .layout-wrapper .layout-main .layout-content {
   border-radius: 50%;
   display: inline-block;
   text-align: center;
-  border: 5px solid #419544;
+  border: 5px solid #2D8EE3;
   border-left-color: #b4d7f5;
 }
 .layout-content .layout-dashboard .statistics .p-panel-content .stats-left .details {
@@ -1660,7 +1660,7 @@ body .layout-wrapper .layout-main .layout-content {
   margin-bottom: 24px;
 }
 .layout-content .layout-dashboard .statistics .p-panel-content .stats-right .statsbar .statsbar-value {
-  background-color: #419544;
+  background-color: #2D8EE3;
   height: 4px;
 }
 .layout-content .layout-dashboard .global-sales .p-panel-content {
@@ -1795,7 +1795,7 @@ body .layout-wrapper .layout-main .layout-content {
 .layout-content .layout-dashboard .inbox .p-panel-content ul li .separator {
   width: 1px;
   height: 50px;
-  background-color: #419544;
+  background-color: #2D8EE3;
   display: inline-block;
   vertical-align: middle;
   margin: 0 8px 0 4px;
@@ -1827,7 +1827,7 @@ body .layout-wrapper .layout-main .layout-content {
 }
 .layout-content .layout-dashboard .inbox .p-panel-content ul li .message-status i {
   font-size: 18px;
-  color: #419544;
+  color: #2D8EE3;
   display: block;
 }
 .layout-content .layout-dashboard .inbox .p-panel-content ul li .message-status i.unread {
@@ -2101,7 +2101,7 @@ body .layout-wrapper .layout-main .layout-content {
 }
 .login-body .login-panel .subinfo {
   text-decoration: none;
-  color: #419544;
+  color: #2D8EE3;
 }
 .login-body .login-panel .subinfo span {
   font-size: 14px;
@@ -3080,7 +3080,7 @@ p:last-child {
   border-radius: 50%;
   display: inline-block;
   text-align: center;
-  border: 5px solid #419544;
+  border: 5px solid #2D8EE3;
   border-left-color: #b4d7f5;
 }
 .widget-statistics .stats-left .details {
@@ -3122,7 +3122,7 @@ p:last-child {
   margin-bottom: 24px;
 }
 .widget-statistics .stats-right .statsbar .statsbar-value {
-  background-color: #419544;
+  background-color: #2D8EE3;
   height: 4px;
 }
 
@@ -3312,7 +3312,7 @@ p:last-child {
 .widget-inbox ul li .separator {
   width: 1px;
   height: 50px;
-  background-color: #419544;
+  background-color: #2D8EE3;
   display: inline-block;
   vertical-align: middle;
   margin: 0 8px 0 4px;
@@ -3344,7 +3344,7 @@ p:last-child {
 }
 .widget-inbox ul li .message-status i {
   font-size: 18px;
-  color: #419544;
+  color: #2D8EE3;
   display: block;
 }
 .widget-inbox ul li .message-status i.unread {
@@ -3437,7 +3437,7 @@ p:last-child {
   width: 1px;
   height: 50px;
   margin: 0 8px 0 4px;
-  background-color: #419544;
+  background-color: #2D8EE3;
   display: inline-block;
   vertical-align: middle;
 }
