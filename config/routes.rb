@@ -31,5 +31,17 @@ Rails.application.routes.draw do
     collection do
     end
   end
+
+  resources :job_post, only: [:index, :create] do
+    collection do
+      post 'updateImage'
+    end
+  end
+
+  resources :event_post, only: [:index, :create] do
+    collection do
+      post 'updateImage'
+    end
+  end
   
 end

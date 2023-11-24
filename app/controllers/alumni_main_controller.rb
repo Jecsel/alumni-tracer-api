@@ -33,7 +33,7 @@ class AlumniMainController < ApplicationController
 
             render json: {message: "Successfully Personal Info.", alumni_main: alumni_main }, status: 200
         else
-            render json: {message: "Please check administrator", alumni_main: alumni_main }, status: 500
+            render json: {message: "User not Found", alumni_main: alumni_main }, status: 404
         end
     end
 
