@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_19_174313) do
+ActiveRecord::Schema.define(version: 2023_11_27_074727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 2023_11_19_174313) do
     t.bigint "user_id"
     t.string "title"
     t.string "venue"
-    t.string "date"
+    t.date "date"
     t.string "time"
     t.string "sponsor"
     t.integer "status", default: 0
@@ -104,6 +104,8 @@ ActiveRecord::Schema.define(version: 2023_11_19_174313) do
     t.string "qualification"
     t.integer "status", default: 0
     t.boolean "is_active", default: false
+    t.date "deployment_date"
+    t.date "active_date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_job_posts_on_user_id"

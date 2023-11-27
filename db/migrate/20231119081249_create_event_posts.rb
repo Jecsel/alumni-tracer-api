@@ -7,7 +7,7 @@ class CreateEventPosts < ActiveRecord::Migration[6.1]
       t.string          :date
       t.string          :time
       t.string          :sponsor
-      t.integer          :status,     default: 0
+      t.integer         :status,     default: 0
       t.boolean         :is_active,   default: false
 
       t.timestamps

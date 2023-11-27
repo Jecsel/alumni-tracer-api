@@ -35,12 +35,20 @@ Rails.application.routes.draw do
   resources :job_post, only: [:index, :create] do
     collection do
       post 'updateImage'
+      post 'acceptJob'
+      post 'rejectJob'
+      post 'currentActiveJobs'
+      post 'userJobPosts'
     end
   end
 
   resources :event_post, only: [:index, :create] do
     collection do
       post 'updateImage'
+      post 'acceptEvent'
+      post 'rejectEvent'
+      post 'getCurrentEvents'
+      post 'getUpcomingEvents'
     end
   end
   

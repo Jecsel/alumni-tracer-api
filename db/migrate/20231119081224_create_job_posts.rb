@@ -11,6 +11,8 @@ class CreateJobPosts < ActiveRecord::Migration[6.1]
       t.string          :qualification
       t.integer         :status,    default: 0
       t.boolean         :is_active, default: false
+      t.date            :deployment_date
+      t.date            :active_date
 
       t.timestamps
     end

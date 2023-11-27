@@ -19,10 +19,48 @@ class EventPostController < ApplicationController
           end
       
         render json: {data: json_array}, status: 200
+    end
 
-        # event_posts = EventPost.all.order(created_at: :desc)
+    def getCurrentEvents
 
-        # render json: { data: event_posts }, status: 200
+        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date == Time.now.to_date }.sort_by(&:created_at).reverse
+
+        json_array = @event_posts.map do |event_post|
+            {
+                id: event_post.id,
+                title: event_post.title,
+                venue: event_post.venue,
+                date: event_post.date,
+                time: event_post.time,
+                sponsor: event_post.sponsor,
+                status: event_post.status,
+                is_active: event_post.is_active,
+                image_url: event_post.image.attached? ? rails_blob_url(event_post.image, only_path: true) : nil
+            }
+          end
+      
+        render json: {data: json_array}, status: 200
+    end
+
+    def getUpcomingEvents
+
+        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.sort_by(&:created_at).reverse
+
+        json_array = @event_posts.map do |event_post|
+            {
+                id: event_post.id,
+                title: event_post.title,
+                venue: event_post.venue,
+                date: event_post.date,
+                time: event_post.time,
+                sponsor: event_post.sponsor,
+                status: event_post.status,
+                is_active: event_post.is_active,
+                image_url: event_post.image.attached? ? rails_blob_url(event_post.image, only_path: true) : nil
+            }
+          end
+      
+        render json: {data: json_array}, status: 200
     end
 
     def create 
@@ -46,6 +84,22 @@ class EventPostController < ApplicationController
             render json: {message: "User not Found" }, status: 404
         end
     end
+
+    def acceptEvent
+        event_post = EventPost.find params[:job_post_id]
+  
+        event_post.update(status: 1)
+  
+        render json: { message: 'Event successfully updated'}, status: 200
+      end
+  
+      def rejectEvent
+        event_post = EventPost.find params[:job_post_id]
+  
+        event_post.update(status: 2)
+  
+        render json: { message: 'Event successfully updated'}, status: 200
+      end
 
     def updateImage
         event_p = EventPost.last

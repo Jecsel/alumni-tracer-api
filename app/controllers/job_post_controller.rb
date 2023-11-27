@@ -16,8 +16,8 @@ class JobPostController < ApplicationController
                 company_email: job_post.company_email,
                 company_address: job_post.company_address,
                 position: job_post.position,
-                date_of_submission: job_post.date_of_submission,
-                date_posted: job_post.date_posted,
+                deployment_date: job_post.deployment_date,
+                active_date: job_post.active_date,
                 qualification: job_post.qualification,
                 status: job_post.status,
                 is_active: job_post.is_active,
@@ -28,7 +28,56 @@ class JobPostController < ApplicationController
           end
       
         render json: {data: json_array}, status: 200
-      end
+    end
+
+    def userJobPosts
+      user_id = params[:user_id]
+      @job_posts = JobPost.where(user_id: user_id).includes(:image_attachment).select { |job_post| job_post.image.attached? }.sort_by(&:created_at).reverse
+
+      json_array = @job_posts.map do |job_post|
+          {
+              id: job_post.id,
+              company_name: job_post.company_name,
+              company_email: job_post.company_email,
+              company_address: job_post.company_address,
+              position: job_post.position,
+              deployment_date: job_post.deployment_date,
+              active_date: job_post.active_date,
+              qualification: job_post.qualification,
+              status: job_post.status,
+              is_active: job_post.is_active,
+              created_at: job_post.created_at,
+              updated_at: job_post.updated_at,
+              image_url: job_post.image.attached? ? rails_blob_url(job_post.image, only_path: true) : nil
+          }
+        end
+    
+      render json: {data: json_array}, status: 200
+  end
+
+    def currentActiveJobs
+      @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
+
+      json_array = @job_posts.map do |job_post|
+          {
+              id: job_post.id,
+              company_name: job_post.company_name,
+              company_email: job_post.company_email,
+              company_address: job_post.company_address,
+              position: job_post.position,
+              deployment_date: job_post.deployment_date,
+              active_date: job_post.active_date,
+              qualification: job_post.qualification,
+              status: job_post.status,
+              is_active: job_post.is_active,
+              created_at: job_post.created_at,
+              updated_at: job_post.updated_at,
+              image_url: job_post.image.attached? ? rails_blob_url(job_post.image, only_path: true) : nil
+          }
+        end
+    
+      render json: {data: json_array}, status: 200
+    end
 
     def create
         user = User.find(job_post_params[:user_id])
@@ -50,6 +99,22 @@ class JobPostController < ApplicationController
         end
       end
 
+    def acceptJob
+      job_post = JobPost.find params[:job_post_id]
+
+      job_post.update(status: 1)
+
+      render json: { message: 'Job successfully updated'}, status: 200
+    end
+
+    def rejectJob
+      job_post = JobPost.find params[:job_post_id]
+
+      job_post.update(status: 2)
+
+      render json: { message: 'Job successfully updated'}, status: 200
+    end
+
 
     def updateImage
         job_p = JobPost.last
@@ -68,7 +133,7 @@ class JobPostController < ApplicationController
     def job_post_params
         params
             .require(:job)
-            .permit(:user_id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification)
+            .permit(:user_id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :deployment_date, :active_date)
     end
       
     
