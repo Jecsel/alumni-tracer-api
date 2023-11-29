@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "ping", to:"application#ping"
   get '/404', to: 'errors#not_found'
   get '/500', to: 'errors#internal_server_error'
+  get 'dashboard_count', to:"application#dashboard_count"
 
   resources :auth, only: [:index] do
     collection do
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
 
   resources :work, only: [:index, :create, :show] do
     collection do
+      post 'updateWork'
     end
   end
 
