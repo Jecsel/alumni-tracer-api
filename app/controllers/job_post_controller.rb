@@ -55,7 +55,40 @@ class JobPostController < ApplicationController
       render json: {data: json_array}, status: 200
   end
 
-    def currentActiveJobs
+  def currentActiveJobs
+    @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.sort_by(&:created_at).reverse
+
+    json_array = @job_posts.map do |job_post|
+        {
+            id: job_post.id,
+            company_name: job_post.company_name,
+            company_email: job_post.company_email,
+            company_address: job_post.company_address,
+            position: job_post.position,
+            deployment_date: job_post.deployment_date,
+            active_date: job_post.active_date,
+            qualification: job_post.qualification,
+            status: job_post.status,
+            is_active: job_post.is_active,
+            created_at: job_post.created_at,
+            updated_at: job_post.updated_at,
+            image_url: job_post.image.attached? ? rails_blob_url(job_post.image, only_path: true) : nil
+        }
+      end
+  
+    render json: {data: json_array}, status: 200
+  end
+
+  def updateJob
+    job_post = JobPost.find update_job_params[:id]
+
+    job_post.update(update_job_params)
+
+    render json: {message: 'Job Post successfully updated.'}, status: 200
+  end
+
+
+    def currentActiveApproveJobs
       @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
 
       json_array = @job_posts.map do |job_post|
@@ -135,6 +168,11 @@ class JobPostController < ApplicationController
             .require(:job)
             .permit(:user_id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :deployment_date, :active_date)
     end
-      
-    
+
+    def update_job_params
+      params
+          .require(:job)
+          .permit(:id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :deployment_date, :active_date)
+  end
+        
 end

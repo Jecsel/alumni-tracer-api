@@ -25,6 +25,8 @@ Rails.application.routes.draw do
 
   resources :alumni_main, only: [:index, :create, :show] do
     collection do
+      post 'updateAlumni'
+      post 'dashboard_count'
     end
   end
 
@@ -40,7 +42,9 @@ Rails.application.routes.draw do
       post 'acceptJob'
       post 'rejectJob'
       post 'currentActiveJobs'
+      post 'currentActiveApproveJobs'
       post 'userJobPosts'
+      post 'updateJob'
     end
   end
 
@@ -51,6 +55,7 @@ Rails.application.routes.draw do
       post 'rejectEvent'
       post 'getCurrentEvents'
       post 'getUpcomingEvents'
+      post 'updateEvent'
     end
   end
   
