@@ -42,16 +42,38 @@ class AlumniMainController < ApplicationController
             tension: 0.4,
         }
 
+        dataEmployee = {
+            label: "Working",
+            data: [],
+            fill: false,
+            backgroundColor: "#e8647a",
+            borderColor: "#ff002b",
+            tension: 0.4,
+        }
+
+        dataSelfEmployed = {
+            label: "Self Employed",
+            data: [],
+            fill: false,
+            backgroundColor: "#f5f754",
+            borderColor: "#fbff00",
+            tension: 0.4,
+        }
+
 
         labels.each do |year|
             dataAll[:data] << AlumniMain.where(batch_year: year).count
             dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
             dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'no' }).count 
+            dataEmployee[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'private' }).count 
+            dataSelfEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'self employed' }).count 
         end
 
         datasets << dataAll
         datasets << dataEmployed
         datasets << dataUnemployed
+        datasets << dataEmployee
+        datasets << dataSelfEmployed
 
         lineData = {
             labels: labels,
@@ -62,6 +84,38 @@ class AlumniMainController < ApplicationController
         render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
 
         # render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts }
+    end
+
+    def registeredAlumniDataChart
+        alumni = AlumniMain.all.count
+        job_posts = JobPost.all.count
+        event_posts = EventPost.all.count
+
+        datasets = []
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse
+
+        dataAll = {
+            label: "All",
+            data: [],
+            fill: false,
+            backgroundColor: "rgb(250, 177, 5)",
+            borderColor: "rgb(255, 205, 86)",
+            tension: 0.8,
+        }
+
+        labels.each do |year|
+            dataAll[:data] << AlumniMain.where(batch_year: year).count
+        end
+
+        datasets << dataAll
+
+        lineData = {
+            labels: labels,
+            datasets: datasets
+        }
+
+
+        render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
     end
 
     def batchYearList
@@ -152,7 +206,7 @@ class AlumniMainController < ApplicationController
             render json: {message: "User not Found" }, status: 404
         end
     end
-    
+
     def show
         user = User.find params[:id]
         alumni_main = user.alumni_main

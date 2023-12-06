@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post 'alumniGroupByWorkType'
       post 'alumniPerWorkType'
       post 'batchYearList'
+      post 'registeredAlumniDataChart'
     end
   end
 

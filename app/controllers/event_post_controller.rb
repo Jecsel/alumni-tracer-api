@@ -80,7 +80,7 @@ class EventPostController < ApplicationController
                 date: event_post_params[:date],
                 time: event_post_params[:time],
                 sponsor: event_post_params[:sponsor],
-                status: 2
+                status: 1
             )
 
             if event_post.save
