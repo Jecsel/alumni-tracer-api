@@ -79,7 +79,8 @@ class EventPostController < ApplicationController
                 venue: event_post_params[:venue],
                 date: event_post_params[:date],
                 time: event_post_params[:time],
-                sponsor: event_post_params[:sponsor]
+                sponsor: event_post_params[:sponsor],
+                status: 2
             )
 
             if event_post.save

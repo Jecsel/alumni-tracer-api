@@ -22,11 +22,15 @@ Rails.application.routes.draw do
     end
   end
 
-
   resources :alumni_main, only: [:index, :create, :show] do
     collection do
       post 'updateAlumni'
       post 'dashboard_count'
+      post 'alumniGroupByBatch'
+      post 'alumniPerBatch'
+      post 'alumniGroupByWorkType'
+      post 'alumniPerWorkType'
+      post 'batchYearList'
     end
   end
 

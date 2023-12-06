@@ -12,7 +12,86 @@ class AlumniMainController < ApplicationController
         job_posts = JobPost.all.count
         event_posts = EventPost.all.count
 
-        render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts }
+        datasets = []
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse
+
+        dataAll = {
+            label: "All",
+            data: [],
+            fill: false,
+            backgroundColor: "rgb(250, 177, 5)",
+            borderColor: "rgb(255, 205, 86)",
+            tension: 0.8,
+        }
+
+        dataEmployed = {
+            label: "Employed",
+            data: [],
+            fill: false,
+            backgroundColor: "#40ed7d",
+            borderColor: "#269920",
+            tension: 0.4,
+        }
+
+        dataUnemployed = {
+            label: "Unemployed",
+            data: [],
+            fill: false,
+            backgroundColor: "#4b59eb",
+            borderColor: "#202ba1",
+            tension: 0.4,
+        }
+
+
+        labels.each do |year|
+            dataAll[:data] << AlumniMain.where(batch_year: year).count
+            dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
+            dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'no' }).count 
+        end
+
+        datasets << dataAll
+        datasets << dataEmployed
+        datasets << dataUnemployed
+
+        lineData = {
+            labels: labels,
+            datasets: datasets
+        }
+
+
+        render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
+
+        # render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts }
+    end
+
+    def batchYearList
+        alumni = AlumniMain.distinct.pluck(:batch_year)
+
+        alumni.map { |alu| { label: alu, value: alu} }
+
+        render json: {data: alumni}, status: 200
+    end
+
+    def alumniGroupByBatch
+        alumni =AlumniMain.all.group_by { |alumni| alumni.batch_year }
+
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniPerBatch
+        alumni = AlumniMain.where(batch_year: params[:batch_year])
+
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniGroupByWorkType
+        alumni = AlumniMain.joins(:work).group_by { |alumni| alumni.work.is_working }
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniPerWorkType
+        alumni = AlumniMain.joins(:work).where(works: { is_working: params[:is_working] })
+        render json: {data: alumni }, status:200
     end
 
     def create
@@ -73,7 +152,7 @@ class AlumniMainController < ApplicationController
             render json: {message: "User not Found" }, status: 404
         end
     end
-
+    
     def show
         user = User.find params[:id]
         alumni_main = user.alumni_main
