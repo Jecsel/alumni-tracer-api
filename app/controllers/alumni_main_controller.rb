@@ -13,7 +13,7 @@ class AlumniMainController < ApplicationController
         event_posts = EventPost.all.count
 
         datasets = []
-        labels = AlumniMain.distinct.pluck(:batch_year).reverse
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
 
         dataAll = {
             label: "All",
@@ -92,12 +92,12 @@ class AlumniMainController < ApplicationController
         event_posts = EventPost.all.count
 
         datasets = []
-        labels = AlumniMain.distinct.pluck(:batch_year).reverse
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
 
         dataAll = {
             label: "All",
             data: [],
-            fill: false,
+            fill: true,
             backgroundColor: "rgb(250, 177, 5)",
             borderColor: "rgb(255, 205, 86)",
             tension: 0.8,
@@ -116,6 +116,54 @@ class AlumniMainController < ApplicationController
 
 
         render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
+    end
+
+    def getItRelateData
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+        isItRelatedData = {
+            labels: ['Yes', 'No'],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)",
+                        "rgb(255, 205, 86)",
+                        "rgb(75, 192, 192)",
+                    ],
+                },
+            ],
+        };
+        year = params[:year]
+
+        
+        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: true }).count 
+        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: false }).count 
+        
+        render json: {data: isItRelatedData}, status: 200
+    end
+
+    def getIsGovSect
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+        isGovSect = {
+            labels: ['Government', 'Private'],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)"
+                    ],
+                },
+            ],
+        };
+        year = params[:year]
+
+        
+        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: true }).count 
+        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: false }).count 
+        
+        render json: {data: isGovSect}, status: 200
     end
 
     def batchYearList

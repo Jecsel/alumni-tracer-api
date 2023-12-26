@@ -32,6 +32,8 @@ Rails.application.routes.draw do
       post 'alumniPerWorkType'
       post 'batchYearList'
       post 'registeredAlumniDataChart'
+      post 'getItRelateData'
+      post 'getIsGovSect'
     end
   end
 

@@ -22,7 +22,9 @@ class WorkController < ApplicationController
                 business_address: work_params[:business_address],
                 business_acronym: work_params[:business_acronym],
                 business_related: work_params[:business_related], 
-                line_of_busines: work_params[:line_of_busines]
+                line_of_busines: work_params[:line_of_busines],
+                is_it_related: work_params[:is_it_related],
+                is_gov_sect: work_params[:is_gov_sect]
             )
             alumni_work.save
 
@@ -49,7 +51,9 @@ class WorkController < ApplicationController
             business_address: update_params[:business_address],
             business_acronym: update_params[:business_acronym],
             business_related: update_params[:business_related],
-            line_of_busines: update_params[:line_of_busines]
+            line_of_busines: update_params[:line_of_busines],
+            is_it_related: work_params[:is_it_related],
+            is_gov_sect: work_params[:is_gov_sect]
         )
 
         render json: {message: "User work updated!", data: work }, status: 200
@@ -70,7 +74,7 @@ class WorkController < ApplicationController
           .permit(
             :user_id, :is_working, :work_type, :work_position, :business_name,
             :company_name, :company_address, :company_acronym, :type_of_business, :area_of_business, :business_address, :business_acronym, :business_related,
-            :line_of_busines
+            :line_of_busines, :is_it_related, :is_gov_sect
           )
     end
 
@@ -80,7 +84,7 @@ class WorkController < ApplicationController
         .permit(
             :user_id, :is_working, :work_position, :business_name, :company_name, :company_address, :company_acronym,
             :type_of_business, :area_of_business, :business_address, :business_acronym, :business_related,
-            :line_of_busines, :work_type
+            :line_of_busines, :work_type, :is_it_related, :is_gov_sect
         )
     end
 
