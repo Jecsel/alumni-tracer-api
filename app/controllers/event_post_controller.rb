@@ -42,6 +42,13 @@ class EventPostController < ApplicationController
         render json: {data: json_array}, status: 200
     end
 
+    def updateEvent
+        event_post = EventPost.find event_update_params[:id]
+        event_post.update(event_update_params)
+
+        render json: { message: 'Event Post successfully update.'}, status: 200
+    end
+
     def getUpcomingEvents
 
         @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.sort_by(&:created_at).reverse
@@ -72,7 +79,8 @@ class EventPostController < ApplicationController
                 venue: event_post_params[:venue],
                 date: event_post_params[:date],
                 time: event_post_params[:time],
-                sponsor: event_post_params[:sponsor]
+                sponsor: event_post_params[:sponsor],
+                status: 1
             )
 
             if event_post.save
@@ -117,6 +125,12 @@ class EventPostController < ApplicationController
         params
             .require(:event)
             .permit(:user_id, :title, :venue, :date, :time, :sponsor)
+    end
+
+    def event_update_params
+        params
+            .require(:event)
+            .permit(:id, :title, :venue, :date, :time, :sponsor)
     end
 
 end

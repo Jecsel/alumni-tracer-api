@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "ping", to:"application#ping"
   get '/404', to: 'errors#not_found'
   get '/500', to: 'errors#internal_server_error'
+  get 'dashboard_count', to:"application#dashboard_count"
 
   resources :auth, only: [:index] do
     collection do
@@ -21,14 +22,24 @@ Rails.application.routes.draw do
     end
   end
 
-
   resources :alumni_main, only: [:index, :create, :show] do
     collection do
+      post 'updateAlumni'
+      post 'dashboard_count'
+      post 'alumniGroupByBatch'
+      post 'alumniPerBatch'
+      post 'alumniGroupByWorkType'
+      post 'alumniPerWorkType'
+      post 'batchYearList'
+      post 'registeredAlumniDataChart'
+      post 'getItRelateData'
+      post 'getIsGovSect'
     end
   end
 
   resources :work, only: [:index, :create, :show] do
     collection do
+      post 'updateWork'
     end
   end
 
@@ -38,7 +49,9 @@ Rails.application.routes.draw do
       post 'acceptJob'
       post 'rejectJob'
       post 'currentActiveJobs'
+      post 'currentActiveApproveJobs'
       post 'userJobPosts'
+      post 'updateJob'
     end
   end
 
@@ -49,6 +62,7 @@ Rails.application.routes.draw do
       post 'rejectEvent'
       post 'getCurrentEvents'
       post 'getUpcomingEvents'
+      post 'updateEvent'
     end
   end
   

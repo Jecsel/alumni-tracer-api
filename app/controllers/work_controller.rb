@@ -22,7 +22,9 @@ class WorkController < ApplicationController
                 business_address: work_params[:business_address],
                 business_acronym: work_params[:business_acronym],
                 business_related: work_params[:business_related], 
-                line_of_busines: work_params[:line_of_busines]
+                line_of_busines: work_params[:line_of_busines],
+                is_it_related: work_params[:is_it_related],
+                is_gov_sect: work_params[:is_gov_sect]
             )
             alumni_work.save
 
@@ -30,6 +32,31 @@ class WorkController < ApplicationController
         else
             render json: {message: "Please check administrator" }, status: 500
         end
+    end
+
+    def updateWork
+        
+        user = User.find update_params[:user_id]
+        work = user.work
+
+        work.update(
+            is_working: update_params[:is_working],
+            work_position: update_params[:work_position],
+            business_name: update_params[:business_name],
+            company_name: update_params[:company_name],
+            company_address: update_params[:company_address],
+            company_acronym: update_params[:company_acronym],
+            type_of_business: update_params[:type_of_business],
+            area_of_business: update_params[:area_of_business],
+            business_address: update_params[:business_address],
+            business_acronym: update_params[:business_acronym],
+            business_related: update_params[:business_related],
+            line_of_busines: update_params[:line_of_busines],
+            is_it_related: work_params[:is_it_related],
+            is_gov_sect: work_params[:is_gov_sect]
+        )
+
+        render json: {message: "User work updated!", data: work }, status: 200
     end
 
     def show
@@ -47,7 +74,18 @@ class WorkController < ApplicationController
           .permit(
             :user_id, :is_working, :work_type, :work_position, :business_name,
             :company_name, :company_address, :company_acronym, :type_of_business, :area_of_business, :business_address, :business_acronym, :business_related,
-            :line_of_busines
+            :line_of_busines, :is_it_related, :is_gov_sect
           )
     end
+
+    def update_params
+        params
+        .require(:user)
+        .permit(
+            :user_id, :is_working, :work_position, :business_name, :company_name, :company_address, :company_acronym,
+            :type_of_business, :area_of_business, :business_address, :business_acronym, :business_related,
+            :line_of_busines, :work_type, :is_it_related, :is_gov_sect
+        )
+    end
+
 end

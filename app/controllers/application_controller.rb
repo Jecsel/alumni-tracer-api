@@ -19,7 +19,15 @@ class ApplicationController < ActionController::API
         error_403 if @current_user.nil?
         error_403 if @current_user.user_token != data["secret"]
         @current_user  
-      end
+    end
+
+    def dashboard_count
+        event_counts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.count
+        job_counts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.count
+        alumni_counts = AlumniMain.all.count
+
+        render json: {event_counts: event_counts, job_counts: job_counts, alumni_counts: alumni_counts}, status: 200
+    end
     
     def error_403
         render json: {message:"Unauthorized",code:403},status:403

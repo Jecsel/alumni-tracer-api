@@ -7,6 +7,195 @@ class AlumniMainController < ApplicationController
         render json: {data: alumni}, status: 200
     end 
 
+    def dashboard_count
+        alumni = AlumniMain.all.count
+        job_posts = JobPost.all.count
+        event_posts = EventPost.all.count
+
+        datasets = []
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+
+        dataAll = {
+            label: "All",
+            data: [],
+            fill: false,
+            backgroundColor: "rgb(250, 177, 5)",
+            borderColor: "rgb(255, 205, 86)",
+            tension: 0.8,
+        }
+
+        dataEmployed = {
+            label: "Employed",
+            data: [],
+            fill: false,
+            backgroundColor: "#40ed7d",
+            borderColor: "#269920",
+            tension: 0.4,
+        }
+
+        dataUnemployed = {
+            label: "Unemployed",
+            data: [],
+            fill: false,
+            backgroundColor: "#4b59eb",
+            borderColor: "#202ba1",
+            tension: 0.4,
+        }
+
+        dataEmployee = {
+            label: "Working",
+            data: [],
+            fill: false,
+            backgroundColor: "#e8647a",
+            borderColor: "#ff002b",
+            tension: 0.4,
+        }
+
+        dataSelfEmployed = {
+            label: "Self Employed",
+            data: [],
+            fill: false,
+            backgroundColor: "#f5f754",
+            borderColor: "#fbff00",
+            tension: 0.4,
+        }
+
+
+        labels.each do |year|
+            dataAll[:data] << AlumniMain.where(batch_year: year).count
+            dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
+            dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'no' }).count 
+            dataEmployee[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'private' }).count 
+            dataSelfEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'self employed' }).count 
+        end
+
+        datasets << dataAll
+        datasets << dataEmployed
+        datasets << dataUnemployed
+        datasets << dataEmployee
+        datasets << dataSelfEmployed
+
+        lineData = {
+            labels: labels,
+            datasets: datasets
+        }
+
+
+        render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
+
+        # render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts }
+    end
+
+    def registeredAlumniDataChart
+        alumni = AlumniMain.all.count
+        job_posts = JobPost.all.count
+        event_posts = EventPost.all.count
+
+        datasets = []
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+
+        dataAll = {
+            label: "All",
+            data: [],
+            fill: true,
+            backgroundColor: "rgb(250, 177, 5)",
+            borderColor: "rgb(255, 205, 86)",
+            tension: 0.8,
+        }
+
+        labels.each do |year|
+            dataAll[:data] << AlumniMain.where(batch_year: year).count
+        end
+
+        datasets << dataAll
+
+        lineData = {
+            labels: labels,
+            datasets: datasets
+        }
+
+
+        render json: { alumni: alumni, job_posts: job_posts, event_posts: event_posts, lineData: lineData}, status: 200
+    end
+
+    def getItRelateData
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+        isItRelatedData = {
+            labels: ['Yes', 'No'],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)",
+                        "rgb(255, 205, 86)",
+                        "rgb(75, 192, 192)",
+                    ],
+                },
+            ],
+        };
+        year = params[:year]
+
+        
+        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: true }).count 
+        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: false }).count 
+        
+        render json: {data: isItRelatedData}, status: 200
+    end
+
+    def getIsGovSect
+        labels = AlumniMain.distinct.pluck(:batch_year).reverse.sort
+        isGovSect = {
+            labels: ['Government', 'Private'],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)"
+                    ],
+                },
+            ],
+        };
+        year = params[:year]
+
+        
+        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: true }).count 
+        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: false }).count 
+        
+        render json: {data: isGovSect}, status: 200
+    end
+
+    def batchYearList
+        alumni = AlumniMain.distinct.pluck(:batch_year)
+
+        alumni.map { |alu| { label: alu, value: alu} }
+
+        render json: {data: alumni}, status: 200
+    end
+
+    def alumniGroupByBatch
+        alumni =AlumniMain.all.group_by { |alumni| alumni.batch_year }
+
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniPerBatch
+        alumni = AlumniMain.where(batch_year: params[:batch_year])
+
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniGroupByWorkType
+        alumni = AlumniMain.joins(:work).group_by { |alumni| alumni.work.is_working }
+        render json: {data: alumni }, status:200
+    end
+
+    def alumniPerWorkType
+        alumni = AlumniMain.joins(:work).where(works: { is_working: params[:is_working] })
+        render json: {data: alumni }, status:200
+    end
+
     def create
         user = User.find alumni_params[:user_id]
 
@@ -36,6 +225,35 @@ class AlumniMainController < ApplicationController
             render json: {message: "User not Found", alumni_main: alumni_main }, status: 404
         end
     end
+    
+    def updateAlumni
+        alumni = AlumniMain.find alumni_update_params[:id]
+
+        if alumni.present?
+            alumni.update(
+                first_name: alumni_update_params[:first_name], 
+                middle_name: alumni_update_params[:middle_name], 
+                last_name: alumni_update_params[:last_name], 
+                batch_year: alumni_update_params[:batch_year],
+                dob: alumni_update_params[:dob],
+                age: alumni_update_params[:age],
+                civil_status: alumni_update_params[:civil_status],
+                gender: alumni_update_params[:gender],
+                region: alumni_update_params[:region],
+                province: alumni_update_params[:province],
+                municipality: alumni_update_params[:municipality],
+                barangay: alumni_update_params[:barangay],
+                course: alumni_update_params[:course], 
+                year_graduated: alumni_update_params[:year_graduated],
+                email_address: alumni_update_params[:email_address],
+                phone_number: alumni_update_params[:phone_number]
+            )
+
+            render json: {message: "Successfully updated.", alumni_main: alumni }, status: 200
+        else
+            render json: {message: "User not Found" }, status: 404
+        end
+    end
 
     def show
         user = User.find params[:id]
@@ -51,6 +269,16 @@ class AlumniMainController < ApplicationController
           .require(:user)
           .permit(
             :user_id, :first_name, :middle_name, :last_name, :batch_year,
+            :dob, :age, :civil_status, :gender, :region, :province, :municipality, :barangay,
+            :course, :year_graduated, :email_address, :phone_number
+          )
+    end
+
+    def alumni_update_params
+        params
+          .require(:user)
+          .permit(
+            :id, :first_name, :middle_name, :last_name, :batch_year,
             :dob, :age, :civil_status, :gender, :region, :province, :municipality, :barangay,
             :course, :year_graduated, :email_address, :phone_number
           )
