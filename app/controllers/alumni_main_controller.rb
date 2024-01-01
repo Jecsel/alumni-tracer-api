@@ -177,10 +177,11 @@ class AlumniMainController < ApplicationController
     def alumniGroupByBatch
         alumni =AlumniMain.all.group_by { |alumni| alumni.batch_year }
 
-        render json: {data: alumni }, status:200
+        render json: {data: alumni, total: AlumniMain.all.count }, status:200
     end
 
     def alumniPerBatch
+
         alumni = AlumniMain.where(batch_year: params[:batch_year])
 
         render json: {data: alumni }, status:200
@@ -195,6 +196,30 @@ class AlumniMainController < ApplicationController
         alumni = AlumniMain.joins(:work).where(works: { is_working: params[:is_working] })
         render json: {data: alumni }, status:200
     end
+
+    def joinAlumniWork
+        alumni = User.joins(:alumni_main, :work)
+        alumnus = []
+        alumni.each do |user|
+            data = {
+                user_id: user.id,
+                first_name: user.alumni_main.first_name,
+                last_name: user.alumni_main.last_name,
+                batch_year: user.alumni_main.batch_year,
+                work_status: user.work.is_working ? 'Working' : 'Not Working',
+                work_sector: user.work.is_gov_sect ? 'Government' : 'Private',
+                it_related: user.work.is_it_related ? 'YES' : 'NO'
+
+            }
+
+            alumnus << data
+        end
+
+        grouped_alumni = alumnus.group_by { |alum| alum[:batch_year] }
+
+        render json: {data: grouped_alumni}, status: 200
+    end
+
 
     def create
         user = User.find alumni_params[:user_id]

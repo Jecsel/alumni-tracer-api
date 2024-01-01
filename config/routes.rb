@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       post 'registeredAlumniDataChart'
       post 'getItRelateData'
       post 'getIsGovSect'
+      post 'joinAlumniWork'
     end
   end
 
