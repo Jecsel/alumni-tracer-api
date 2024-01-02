@@ -1,6 +1,7 @@
 class AlumniMainController < ApplicationController
     # before_action :must_be_authenticated
     # skip_before_action :verify_authenticity_token
+    before_action :set_alumni_main, only: [:destroy]
 
     def index
         alumni = AlumniMain.all
@@ -175,9 +176,10 @@ class AlumniMainController < ApplicationController
     end
 
     def alumniGroupByBatch
-        alumni =AlumniMain.all.group_by { |alumni| alumni.batch_year }
+        alumni =AlumniMain.all
+        alumni_group = AlumniMain.all.group_by { |alumni| alumni.batch_year }
 
-        render json: {data: alumni, total: AlumniMain.all.count }, status:200
+        render json: {data: alumni, group: alumni_group, total: AlumniMain.all.count }, status:200
     end
 
     def alumniPerBatch
@@ -287,7 +289,16 @@ class AlumniMainController < ApplicationController
         render json: { data: alumni_main }, status: 200
     end
 
+    def destroy
+        @alumni_main.destroy
+        render json: { message: 'AlumniMain deleted successfully' }, status: 200
+    end
+
     private
+
+    def set_alumni_main
+        @alumni_main = AlumniMain.find(params[:id])
+      end
 
     def alumni_params
         params
