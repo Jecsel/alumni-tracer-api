@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :alumni_main, only: [:index, :create, :show] do
+  resources :alumni_main, only: [:index, :create, :show, :destroy] do
     collection do
       post 'updateAlumni'
       post 'dashboard_count'
