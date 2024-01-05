@@ -204,7 +204,7 @@ class AlumniMainController < ApplicationController
         alumnus = []
         alumni.each do |user|
             data = {
-                id: user.id,
+                id: user.alumni_main.id,
                 user_id: user.id,
                 first_name: user.alumni_main.first_name,
                 last_name: user.alumni_main.last_name,
