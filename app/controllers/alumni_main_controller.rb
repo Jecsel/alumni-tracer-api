@@ -25,14 +25,14 @@ class AlumniMainController < ApplicationController
             tension: 0.8,
         }
 
-        dataEmployed = {
-            label: "Employed",
-            data: [],
-            fill: false,
-            backgroundColor: "#40ed7d",
-            borderColor: "#269920",
-            tension: 0.4,
-        }
+        # dataEmployed = {
+        #     label: "Employed",
+        #     data: [],
+        #     fill: false,
+        #     backgroundColor: "#40ed7d",
+        #     borderColor: "#269920",
+        #     tension: 0.4,
+        # }
 
         dataUnemployed = {
             label: "Unemployed",
@@ -64,14 +64,14 @@ class AlumniMainController < ApplicationController
 
         labels.each do |year|
             dataAll[:data] << AlumniMain.where(batch_year: year).count
-            dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
+            # dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
             dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'no' }).count 
             dataEmployee[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'private' }).count 
             dataSelfEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'self employed' }).count 
         end
 
         datasets << dataAll
-        datasets << dataEmployed
+        # datasets << dataEmployed
         datasets << dataUnemployed
         datasets << dataEmployee
         datasets << dataSelfEmployed
