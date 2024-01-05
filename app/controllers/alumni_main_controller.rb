@@ -9,7 +9,7 @@ class AlumniMainController < ApplicationController
     end 
 
     def dashboard_count
-        alumni = AlumniMain.all.count
+        alumni =  User.joins(:alumni_main, :work).count
         job_posts = JobPost.all.count
         event_posts = EventPost.all.count
 

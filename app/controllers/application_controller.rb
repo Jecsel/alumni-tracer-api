@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
     def dashboard_count
         event_counts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.count
         job_counts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.count
-        alumni_counts = AlumniMain.all.count
+        alumni_counts = User.joins(:alumni_main, :work).count
 
         render json: {event_counts: event_counts, job_counts: job_counts, alumni_counts: alumni_counts}, status: 200
     end

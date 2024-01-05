@@ -8,25 +8,58 @@ class WorkController < ApplicationController
         user = User.find work_params[:user_id]
 
         if user.present?
-            alumni_work = user.build_work(
-                is_working: work_params[:is_working], 
-                work_type: work_params[:work_type], 
-                work_position: work_params[:work_position], 
-                business_name: work_params[:business_name],
-                company_name: work_params[:company_name],
-                company_address: work_params[:company_address],
-                company_acronym: work_params[:company_acronym],
-                type_of_business: work_params[:type_of_business],
-                area_of_business: work_params[:area_of_business],
-                business_address: work_params[:business_address],
-                business_address: work_params[:business_address],
-                business_acronym: work_params[:business_acronym],
-                business_related: work_params[:business_related], 
-                line_of_busines: work_params[:line_of_busines],
-                is_it_related: work_params[:is_it_related],
-                is_gov_sect: work_params[:is_gov_sect]
-            )
-            alumni_work.save
+
+
+            begin
+
+                alumni_work = Work.create(
+                    user_id: user.id, 
+                    is_working: work_params[:is_working], 
+                    work_type: work_params[:work_type], 
+                    work_position: work_params[:work_position], 
+                    business_name: work_params[:business_name],
+                    company_name: work_params[:company_name],
+                    company_address: work_params[:company_address],
+                    company_acronym: work_params[:company_acronym],
+                    type_of_business: work_params[:type_of_business],
+                    area_of_business: work_params[:area_of_business],
+                    business_address: work_params[:business_address],
+                    business_address: work_params[:business_address],
+                    business_acronym: work_params[:business_acronym],
+                    business_related: work_params[:business_related], 
+                    line_of_busines: work_params[:line_of_busines],
+                    is_it_related: work_params[:is_it_related],
+                    is_gov_sect: work_params[:is_gov_sect]
+                )
+
+                # alumni_work = user.build_work(
+                #     is_working: work_params[:is_working], 
+                #     work_type: work_params[:work_type], 
+                #     work_position: work_params[:work_position], 
+                #     business_name: work_params[:business_name],
+                #     company_name: work_params[:company_name],
+                #     company_address: work_params[:company_address],
+                #     company_acronym: work_params[:company_acronym],
+                #     type_of_business: work_params[:type_of_business],
+                #     area_of_business: work_params[:area_of_business],
+                #     business_address: work_params[:business_address],
+                #     business_address: work_params[:business_address],
+                #     business_acronym: work_params[:business_acronym],
+                #     business_related: work_params[:business_related], 
+                #     line_of_busines: work_params[:line_of_busines],
+                #     is_it_related: work_params[:is_it_related],
+                #     is_gov_sect: work_params[:is_gov_sect]
+                # )
+                # alumni_work.save
+              rescue ActiveRecord::RecordNotFound => e
+                # Handle the specific exception for a missing record
+                logger.error "Record not found: #{e.message}"
+                flash[:error] = "Record not found"
+                redirect_to root_path
+              
+              rescue => e
+
+              end
 
             render json: {message: "Successfully Personal Info.", alumni_work: alumni_work }, status: 200
         else
