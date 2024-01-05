@@ -138,8 +138,10 @@ class AlumniMainController < ApplicationController
         year = params[:year]
 
         
-        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: true }).count 
-        isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: false }).count 
+        # isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: true }).count 
+        # isItRelatedData[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_it_related: false }).count 
+        isItRelatedData[:datasets][0][:data] << Work.where(is_it_related: true).count 
+        isItRelatedData[:datasets][0][:data] << Work.where(is_it_related: false).count  
         
         render json: {data: isItRelatedData}, status: 200
     end
@@ -161,8 +163,13 @@ class AlumniMainController < ApplicationController
         year = params[:year]
 
         
-        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: true }).count 
-        isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: false }).count 
+        # isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: true }).count 
+        # isGovSect[:datasets][0][:data] << AlumniMain.joins(:work).where(batch_year: year, works: { is_gov_sect: false }).count 
+
+        isGovSect[:datasets][0][:data] << Work.where(is_gov_sect: true).count 
+        isGovSect[:datasets][0][:data] << Work.where(is_gov_sect: false).count 
+
+
         
         render json: {data: isGovSect}, status: 200
     end
