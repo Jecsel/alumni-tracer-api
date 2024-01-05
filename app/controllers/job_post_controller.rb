@@ -23,6 +23,8 @@ class JobPostController < ApplicationController
                 is_active: job_post.is_active,
                 created_at: job_post.created_at,
                 updated_at: job_post.updated_at,
+                job_seeker_email: job_post.job_seeker_email,
+                job_seeker_contact: job_post.job_seeker_contact,  
                 image_url: job_post.image.attached? ? rails_blob_url(job_post.image, only_path: true) : nil
             }
           end
@@ -44,6 +46,8 @@ class JobPostController < ApplicationController
               deployment_date: job_post.deployment_date,
               active_date: job_post.active_date,
               qualification: job_post.qualification,
+              job_seeker_email: job_post.job_seeker_email,
+              job_seeker_contact: job_post.job_seeker_contact,
               status: job_post.status,
               is_active: job_post.is_active,
               created_at: job_post.created_at,
@@ -68,6 +72,8 @@ class JobPostController < ApplicationController
             deployment_date: job_post.deployment_date,
             active_date: job_post.active_date,
             qualification: job_post.qualification,
+            job_seeker_email: job_post.job_seeker_email,
+              job_seeker_contact: job_post.job_seeker_contact,
             status: job_post.status,
             is_active: job_post.is_active,
             created_at: job_post.created_at,
@@ -89,7 +95,7 @@ class JobPostController < ApplicationController
 
 
     def currentActiveApproveJobs
-      @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
+      @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now - 1.day }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
 
       json_array = @job_posts.map do |job_post|
           {
@@ -102,6 +108,8 @@ class JobPostController < ApplicationController
               active_date: job_post.active_date,
               qualification: job_post.qualification,
               status: job_post.status,
+              job_seeker_email: job_post.job_seeker_email,
+              job_seeker_contact: job_post.job_seeker_contact,
               is_active: job_post.is_active,
               created_at: job_post.created_at,
               updated_at: job_post.updated_at,
@@ -166,13 +174,13 @@ class JobPostController < ApplicationController
     def job_post_params
         params
             .require(:job)
-            .permit(:user_id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :deployment_date, :active_date)
+            .permit(:user_id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :job_seeker_email, :job_seeker_contact, :deployment_date, :active_date)
     end
 
     def update_job_params
       params
           .require(:job)
-          .permit(:id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :deployment_date, :active_date)
+          .permit(:id, :company_name, :company_email, :position, :company_address, :date_of_submission, :date_posted, :qualification, :job_seeker_email, :job_seeker_contact, :deployment_date, :active_date)
   end
         
 end

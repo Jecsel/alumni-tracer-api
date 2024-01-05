@@ -1,6 +1,7 @@
 class AlumniMainController < ApplicationController
     # before_action :must_be_authenticated
     # skip_before_action :verify_authenticity_token
+    before_action :set_alumni_main, only: [:destroy]
 
     def index
         alumni = AlumniMain.all
@@ -8,7 +9,7 @@ class AlumniMainController < ApplicationController
     end 
 
     def dashboard_count
-        alumni = AlumniMain.all.count
+        alumni =  User.joins(:alumni_main, :work).count
         job_posts = JobPost.all.count
         event_posts = EventPost.all.count
 
@@ -175,12 +176,14 @@ class AlumniMainController < ApplicationController
     end
 
     def alumniGroupByBatch
-        alumni =AlumniMain.all.group_by { |alumni| alumni.batch_year }
+        alumni =AlumniMain.all
+        alumni_group = AlumniMain.all.group_by { |alumni| alumni.batch_year }
 
-        render json: {data: alumni }, status:200
+        render json: {data: alumni, group: alumni_group, total: AlumniMain.all.count }, status:200
     end
 
     def alumniPerBatch
+
         alumni = AlumniMain.where(batch_year: params[:batch_year])
 
         render json: {data: alumni }, status:200
@@ -195,6 +198,49 @@ class AlumniMainController < ApplicationController
         alumni = AlumniMain.joins(:work).where(works: { is_working: params[:is_working] })
         render json: {data: alumni }, status:200
     end
+
+    def joinAlumniWork
+        alumni = User.joins(:alumni_main, :work)
+        alumnus = []
+        alumni.each do |user|
+            data = {
+                id: user.id,
+                user_id: user.id,
+                first_name: user.alumni_main.first_name,
+                last_name: user.alumni_main.last_name,
+                batch_year: user.alumni_main.batch_year,
+                dob: user.alumni_main.dob,
+                age: user.alumni_main.age,
+                civil_status: user.alumni_main.civil_status == 1 ? 'Single' : 'Married',
+                gender: user.alumni_main.gender == 1 ? 'Male' : 'Female',
+                region: user.alumni_main.region,
+                province: user.alumni_main.province,
+                municipality: user.alumni_main.municipality,
+                barangay: user.alumni_main.barangay,
+                course: user.alumni_main.course,
+                email_address: user.alumni_main.email_address,
+                phone_number: user.alumni_main.phone_number,
+                work_status: user.work.is_working ? 'Working' : 'Not Working',
+                work_sector: user.work.is_gov_sect ? 'Government' : 'Private',
+                it_related: user.work.is_it_related ? 'YES' : 'NO',
+                work_type:  user.work.work_type,
+                work_position: user.work.work_position,
+                business_name: user.work.business_name,
+                company_name: user.work.company_name,
+                company_address: user.work.company_address,
+                company_acronym: user.work.company_acronym,
+                type_of_business: user.work.type_of_business,
+                area_of_business: user.work.area_of_business,
+                business_address: user.work.business_address
+            }
+
+            alumnus << data
+        end
+        # grouped_alumni = alumnus.group_by { |alum| alum[:batch_year] }
+
+        render json: {data: alumnus}, status: 200
+    end
+
 
     def create
         user = User.find alumni_params[:user_id]
@@ -258,11 +304,21 @@ class AlumniMainController < ApplicationController
     def show
         user = User.find params[:id]
         alumni_main = user.alumni_main
+        alumni_work = user.work
 
-        render json: { data: alumni_main }, status: 200
+        render json: { data: alumni_main, work: alumni_work }, status: 200
+    end
+
+    def destroy
+        @alumni_main.destroy
+        render json: { message: 'AlumniMain deleted successfully' }, status: 200
     end
 
     private
+
+    def set_alumni_main
+        @alumni_main = AlumniMain.find(params[:id])
+      end
 
     def alumni_params
         params
