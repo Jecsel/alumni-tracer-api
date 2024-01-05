@@ -204,22 +204,41 @@ class AlumniMainController < ApplicationController
         alumnus = []
         alumni.each do |user|
             data = {
+                id: user.id,
                 user_id: user.id,
                 first_name: user.alumni_main.first_name,
                 last_name: user.alumni_main.last_name,
                 batch_year: user.alumni_main.batch_year,
+                dob: user.alumni_main.dob,
+                age: user.alumni_main.age,
+                civil_status: user.alumni_main.civil_status == 1 ? 'Single' : 'Married',
+                gender: user.alumni_main.gender == 1 ? 'Male' : 'Female',
+                region: user.alumni_main.region,
+                province: user.alumni_main.province,
+                municipality: user.alumni_main.municipality,
+                barangay: user.alumni_main.barangay,
+                course: user.alumni_main.course,
+                email_address: user.alumni_main.email_address,
+                phone_number: user.alumni_main.phone_number,
                 work_status: user.work.is_working ? 'Working' : 'Not Working',
                 work_sector: user.work.is_gov_sect ? 'Government' : 'Private',
-                it_related: user.work.is_it_related ? 'YES' : 'NO'
-
+                it_related: user.work.is_it_related ? 'YES' : 'NO',
+                work_type:  user.work.work_type,
+                work_position: user.work.work_position,
+                business_name: user.work.business_name,
+                company_name: user.work.company_name,
+                company_address: user.work.company_address,
+                company_acronym: user.work.company_acronym,
+                type_of_business: user.work.type_of_business,
+                area_of_business: user.work.area_of_business,
+                business_address: user.work.business_address
             }
 
             alumnus << data
         end
+        # grouped_alumni = alumnus.group_by { |alum| alum[:batch_year] }
 
-        grouped_alumni = alumnus.group_by { |alum| alum[:batch_year] }
-
-        render json: {data: grouped_alumni}, status: 200
+        render json: {data: alumnus}, status: 200
     end
 
 
@@ -285,8 +304,9 @@ class AlumniMainController < ApplicationController
     def show
         user = User.find params[:id]
         alumni_main = user.alumni_main
+        alumni_work = user.work
 
-        render json: { data: alumni_main }, status: 200
+        render json: { data: alumni_main, work: alumni_work }, status: 200
     end
 
     def destroy
