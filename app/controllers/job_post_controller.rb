@@ -95,7 +95,8 @@ class JobPostController < ApplicationController
 
 
     def currentActiveApproveJobs
-      @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now - 1.day }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
+      @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
+      # @job_posts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now - 1.day }.select { |job_post| job_post.status == 1 }.sort_by(&:created_at).reverse
 
       json_array = @job_posts.map do |job_post|
           {
