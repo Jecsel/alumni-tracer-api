@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_01_152606) do
+ActiveRecord::Schema.define(version: 2024_01_24_204821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,15 @@ ActiveRecord::Schema.define(version: 2024_01_01_152606) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "alumni_lists", force: :cascade do |t|
+    t.string "batch_year"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "municipality"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "alumni_mains", force: :cascade do |t|
@@ -83,8 +92,8 @@ ActiveRecord::Schema.define(version: 2024_01_01_152606) do
     t.bigint "user_id"
     t.string "title"
     t.string "venue"
-    t.date "date"
-    t.string "time"
+    t.datetime "date_from"
+    t.datetime "date_to"
     t.string "sponsor"
     t.integer "status", default: 0
     t.boolean "is_active", default: false

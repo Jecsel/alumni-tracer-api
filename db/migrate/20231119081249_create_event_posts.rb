@@ -4,8 +4,8 @@ class CreateEventPosts < ActiveRecord::Migration[6.1]
       t.references      :user, foreign_key: true
       t.string          :title
       t.string          :venue
-      t.string          :date
-      t.string          :time
+      t.datetime        :date_from
+      t.datetime        :date_to
       t.string          :sponsor
       t.integer         :status,     default: 0
       t.boolean         :is_active,   default: false

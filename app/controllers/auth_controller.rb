@@ -40,6 +40,21 @@ class AuthController < ApplicationController
     end
 
   end
+
+  def forgot_password
+    begin
+      @user = User.find_by_username(user_params[:username].downcase)
+      if @user.nil?
+        render json: { message: "User is not registered!" }, status: 500
+      else
+        @user.update(password: Digest::MD5.hexdigest(user_params[:password])[0..19])
+
+        render json: { message: "Password successfull updated!"}, status: 200
+      end
+    rescue => exception
+      p exception
+    end
+  end
   
   private 
 

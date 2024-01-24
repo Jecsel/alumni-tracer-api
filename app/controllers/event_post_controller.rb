@@ -9,8 +9,8 @@ class EventPostController < ApplicationController
                 id: event_post.id,
                 title: event_post.title,
                 venue: event_post.venue,
-                date: event_post.date,
-                time: event_post.time,
+                date_from: event_post.date_from,
+                date_to: event_post.date_to,
                 sponsor: event_post.sponsor,
                 status: event_post.status,
                 is_active: event_post.is_active,
@@ -22,16 +22,20 @@ class EventPostController < ApplicationController
     end
 
     def getCurrentEvents
+        current_datetime = DateTime.now
+        new_datetime = current_datetime + Rational(8, 24)
+        formatted_datetime = new_datetime.strftime('%a, %d %b %Y %H:%M:%S.%N UTC %:z')
 
-        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date == Time.now.to_date }.sort_by(&:created_at).reverse
+
+        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_from.to_date >= DateTime.now.to_date &&  event_post.date_from.hour <= (DateTime.now.hour + 8) && event_post.date_to.to_date >= DateTime.now.to_date }.sort_by(&:created_at).reverse
 
         json_array = @event_posts.map do |event_post|
             {
                 id: event_post.id,
                 title: event_post.title,
                 venue: event_post.venue,
-                date: event_post.date,
-                time: event_post.time,
+                date_from: event_post.date_from,
+                date_to: event_post.date_to,
                 sponsor: event_post.sponsor,
                 status: event_post.status,
                 is_active: event_post.is_active,
@@ -51,15 +55,15 @@ class EventPostController < ApplicationController
 
     def getUpcomingEvents
 
-        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.sort_by(&:created_at).reverse
+        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_to.to_date > DateTime.now.to_date}.sort_by(&:created_at).reverse
 
         json_array = @event_posts.map do |event_post|
             {
                 id: event_post.id,
                 title: event_post.title,
                 venue: event_post.venue,
-                date: event_post.date,
-                time: event_post.time,
+                date_from: event_post.date_from,
+                date_to: event_post.date_to,
                 sponsor: event_post.sponsor,
                 status: event_post.status,
                 is_active: event_post.is_active,
@@ -77,8 +81,8 @@ class EventPostController < ApplicationController
             event_post = user.event_post.create(
                 title: event_post_params[:title],
                 venue: event_post_params[:venue],
-                date: event_post_params[:date],
-                time: event_post_params[:time],
+                date_from: event_post_params[:date_from],
+                date_to: event_post_params[:date_to],
                 sponsor: event_post_params[:sponsor],
                 status: 1
             )
@@ -124,13 +128,13 @@ class EventPostController < ApplicationController
     def event_post_params
         params
             .require(:event)
-            .permit(:user_id, :title, :venue, :date, :time, :sponsor)
+            .permit(:user_id, :title, :venue, :date_from, :date_to, :sponsor)
     end
 
     def event_update_params
         params
             .require(:event)
-            .permit(:id, :title, :venue, :date, :time, :sponsor)
+            .permit(:id, :title, :venue, :date_from, :date_to, :sponsor)
     end
 
 end
