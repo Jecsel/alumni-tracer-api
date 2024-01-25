@@ -226,7 +226,6 @@ class AlumniMainController < ApplicationController
                 course: user.alumni_main.course,
                 email_address: user.alumni_main.email_address,
                 phone_number: user.alumni_main.phone_number,
-                work_status: user.work.is_working == 'yes' ? 'Working' : 'Not Working',
                 work_sector: user.work.is_gov_sect ? 'Government' : 'Private',
                 it_related: user.work.is_it_related ? 'YES' : 'NO',
                 work_type:  user.work.work_type,
