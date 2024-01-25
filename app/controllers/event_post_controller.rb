@@ -27,7 +27,13 @@ class EventPostController < ApplicationController
         formatted_datetime = new_datetime.strftime('%a, %d %b %Y %H:%M:%S.%N UTC %:z')
 
 
-        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_from.to_date >= DateTime.now.to_date &&  event_post.date_from.hour <= (DateTime.now.hour + 8) && event_post.date_to.to_date >= DateTime.now.to_date }.sort_by(&:created_at).reverse
+        # @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_from.to_date >= DateTime.now.to_date &&  event_post.date_from.hour <= (DateTime.now.hour + 8) && event_post.date_to.to_date >= DateTime.now.to_date }.sort_by(&:created_at).reverse
+        @event_posts = EventPost.includes(:image_attachment)
+                                .select { |event_post| event_post.image.attached? }
+                                .select { |event_post| event_post.date_from <= current_datetime && current_datetime <= event_post.date_to}
+                                .sort_by(&:created_at)
+                                .reverse
+
 
         json_array = @event_posts.map do |event_post|
             {
@@ -54,8 +60,14 @@ class EventPostController < ApplicationController
     end
 
     def getUpcomingEvents
+        const currentDate = Date.now();
 
-        @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_to.to_date > DateTime.now.to_date}.sort_by(&:created_at).reverse
+        # @event_posts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_to.to_date > DateTime.now.to_date}.sort_by(&:created_at).reverse
+        @event_posts = EventPost.includes(:image_attachment)
+                                .select { |event_post| event_post.image.attached? }
+                                .select { |event_post| currentDate < event.date_from}
+                                .sort_by(&:created_at).reverse
+
 
         json_array = @event_posts.map do |event_post|
             {

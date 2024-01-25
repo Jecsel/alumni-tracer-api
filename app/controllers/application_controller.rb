@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
     end
 
     def dashboard_count
-        event_counts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date > Time.now.to_date }.count
+        event_counts = EventPost.includes(:image_attachment).select { |event_post| event_post.image.attached? }.select { |event_post| event_post.date_from.to_date > Time.now.to_date }.count
         job_counts = JobPost.includes(:image_attachment).select { |job_post| job_post.image.attached? }.select { |job_post| job_post.active_date > Time.now }.select { |job_post| job_post.status == 1 }.count
         alumni_counts = User.joins(:alumni_main, :work).count
 
