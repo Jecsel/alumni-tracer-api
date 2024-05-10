@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :auth, only: [:index] do
     collection do
       post 'sign_in'
+      post 'forgot_password'
     end
   end
 
@@ -35,6 +36,7 @@ Rails.application.routes.draw do
       post 'getItRelateData'
       post 'getIsGovSect'
       post 'joinAlumniWork'
+      post 'updateAlumniImage'
     end
   end
 
@@ -43,6 +45,8 @@ Rails.application.routes.draw do
       post 'updateWork'
     end
   end
+
+  resources :alumni_list, only: [:index, :create]
 
   resources :job_post, only: [:index, :create] do
     collection do

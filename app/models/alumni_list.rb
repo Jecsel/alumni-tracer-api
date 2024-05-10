@@ -1,0 +1,2 @@
+class AlumniList < ApplicationRecord
+end

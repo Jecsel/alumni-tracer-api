@@ -44,7 +44,7 @@ class AlumniMainController < ApplicationController
         }
 
         dataEmployee = {
-            label: "Working",
+            label: "Employed",
             data: [],
             fill: false,
             backgroundColor: "#e8647a",
@@ -64,9 +64,8 @@ class AlumniMainController < ApplicationController
 
         labels.each do |year|
             dataAll[:data] << AlumniMain.where(batch_year: year).count
-            # dataEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'yes' }).count 
-            dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { is_working: 'no' }).count 
-            dataEmployee[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'private' }).count 
+            dataUnemployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'unemployed' }).count 
+            dataEmployee[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'employed' }).count 
             dataSelfEmployed[:data]<<AlumniMain.joins(:work).where(batch_year: year, works: { work_type: 'self employed' }).count 
         end
 
@@ -197,12 +196,12 @@ class AlumniMainController < ApplicationController
     end
 
     def alumniGroupByWorkType
-        alumni = AlumniMain.joins(:work).group_by { |alumni| alumni.work.is_working }
+        alumni = AlumniMain.joins(:work).group_by { |alumni| alumni.work.work_type }
         render json: {data: alumni }, status:200
     end
 
     def alumniPerWorkType
-        alumni = AlumniMain.joins(:work).where(works: { is_working: params[:is_working] })
+        alumni = AlumniMain.joins(:work).where(works: { is_working: params[:work_type] })
         render json: {data: alumni }, status:200
     end
 
@@ -227,7 +226,6 @@ class AlumniMainController < ApplicationController
                 course: user.alumni_main.course,
                 email_address: user.alumni_main.email_address,
                 phone_number: user.alumni_main.phone_number,
-                work_status: user.work.is_working == 'yes' ? 'Working' : 'Not Working',
                 work_sector: user.work.is_gov_sect ? 'Government' : 'Private',
                 it_related: user.work.is_it_related ? 'YES' : 'NO',
                 work_type:  user.work.work_type,
@@ -278,6 +276,19 @@ class AlumniMainController < ApplicationController
             render json: {message: "User not Found", alumni_main: alumni_main }, status: 404
         end
     end
+
+    def updateAlumniImage
+        alumni_p = AlumniMain.last
+
+        p "==== image ====="
+        p params[:image]
+        
+        if alumni_p.update(image: params[:image])
+          render json: { message: 'Image updated successfully' }, status: :ok
+        else
+          render json: { error: 'Failed to update image' }, status: :unprocessable_entity
+        end
+    end
     
     def updateAlumni
         alumni = AlumniMain.find alumni_update_params[:id]
@@ -313,7 +324,7 @@ class AlumniMainController < ApplicationController
         alumni_main = user.alumni_main
         alumni_work = user.work
 
-        render json: { data: alumni_main, work: alumni_work }, status: 200
+        render json: { data: alumni_main, work: alumni_work, image_url: alumni_main.image.attached? ? rails_blob_url(alumni_main.image, only_path: true) : nil }, status: 200
     end
 
     def destroy
@@ -333,7 +344,7 @@ class AlumniMainController < ApplicationController
           .permit(
             :user_id, :first_name, :middle_name, :last_name, :batch_year,
             :dob, :age, :civil_status, :gender, :region, :province, :municipality, :barangay,
-            :course, :year_graduated, :email_address, :phone_number
+            :course, :year_graduated, :email_address, :phone_number, :image
           )
     end
 
